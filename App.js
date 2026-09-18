@@ -1,20 +1,38 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import { StatusBar } from "expo-status-bar";
+import { NavigationContainer } from "@react-navigation/native";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-export default function App() {
+import InitPage from "./src/pages/initPage";
+// import DynamicForm from "./src/pages/DynamicForm";
+import LoginScreen from "./src/pages/mobile/login";
+import InvitesScreen from "./src/pages/mobile/invite";
+import ResidentDashboardScreen from "./src/pages/mobile/dashboard";
+import ShareInviteScreen from "./src/pages/mobile/shareinvite";
+import EditResidentModal from "./src/pages/mobile/residentModals";
+
+const Stack = createNativeStackNavigator();
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <NavigationContainer>
       <StatusBar style="auto" />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+      <Stack.Navigator
+        initialRouteName="LoginScreen"
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
+        {/* <Stack.Screen name="DynamicForm" component={DynamicForm} /> */}
+        {/* <Stack.Screen name="InitPage" component={InitPage} /> */}
+        <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        <Stack.Screen name="ResidentDashboardScreen" component={ResidentDashboardScreen} />
+        <Stack.Screen name="InvitesScreen" component={InvitesScreen} />
+        <Stack.Screen name="ShareInviteScreen" component={ShareInviteScreen} />
+        <Stack.Screen name="EditResidentModal" component={EditResidentModal} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default App;
