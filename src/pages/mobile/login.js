@@ -20,7 +20,7 @@ import {
 } from 'lucide-react-native';
 import { login } from '../../service/auth';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({ navigation, route }) {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -74,7 +74,9 @@ export default function LoginScreen({ navigation }) {
      */
     const data = await login(username, password)
 
-    navigation.replace('ResidentDashboardScreen');
+    navigation.replace('ResidentDashboardScreen', {
+      token: data
+    });
   };
 
   const handleForgotPassword = () => {

@@ -1,9 +1,6 @@
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-
-import InitPage from "./src/pages/initPage";
-// import DynamicForm from "./src/pages/DynamicForm";
 import LoginScreen from "./src/pages/mobile/login";
 import InvitesScreen from "./src/pages/mobile/invite";
 import ResidentDashboardScreen from "./src/pages/mobile/dashboard";
@@ -23,8 +20,6 @@ const App = () => {
           headerShown: false,
         }}
       >
-        {/* <Stack.Screen name="DynamicForm" component={DynamicForm} /> */}
-        {/* <Stack.Screen name="InitPage" component={InitPage} /> */}
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="ResidentDashboardScreen" component={ResidentDashboardScreen} />
         <Stack.Screen name="InvitesScreen" component={InvitesScreen} />

@@ -1,21 +1,19 @@
 const API_URL = 'http://127.0.0.1:8000'
-export async function fetch_dashboard(token) {
+export const fetchDashboard = async (token) => {
     const response = await fetch(
-        `${API_URL}/building/auth/client/dashboard/get/${token}`,{
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            // body: JSON.stringify({
-                // token
-            // }),
-        }
-    )
-    const data = await response.json()
-    if(!response.ok){
-        throw new Error(data.detail || 'Erro Fetching Dashboard Data!')
+        `http://127.0.0.1:8000/building/auth/client/dashboard/get/${1}`
+    );
+    if (!response.ok) {
+        const errorData = await response
+            .json()
+            .catch(() => null);
+        throw new Error(
+            errorData?.detail ||
+            `Erro HTTP ${response.status}`
+        );
     }
-    // console.log('DADOS: ',data)
+    const data = await response.json();
+    console.log('DASHBOARD DATA:', data);
 
     return data
 }
