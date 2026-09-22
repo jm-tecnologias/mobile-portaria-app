@@ -15,17 +15,18 @@ import {
   Building2,
   KeyRound,
   User,
+  IdCard,
   Pencil,
   Phone,
   Mail,
   Home,
 } from 'lucide-react-native';
-import { fetchDashboard } from '../../service/_dashboard-call-event';
 
 export default function ResidentDashboardScreen({ navigation, route }) {
   const { token } = route.params ?? {};
-
-  console.log('Token recebido: ', token)
+  const navigationParams = {
+    token
+  }
 
   const [dashboard_data, setDashboard_data] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -83,7 +84,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
   }, []);
 
-  
+
 
   // =========================================================
   // LOADING
@@ -163,15 +164,21 @@ export default function ResidentDashboardScreen({ navigation, route }) {
   // =========================================================
 
   const handleEditProfile = () => {
-    navigation.navigate('EditResidentModal');
+    navigation.navigate('EditProfileModal', {
+      ...navigationParams
+    });
   };
 
   const handleNavigateToInvites = () => {
-    navigation.navigate('InvitesScreen');
+    navigation.navigate('InvitesScreen', {
+      ...navigationParams
+    });
   };
 
-  const handleNavigateToProfile = () => {
-    navigation.navigate('Profile');
+  const handleNavigateToID = () => {
+    navigation.navigate('Identification', {
+      ...navigationParams
+    });
   };
 
 
@@ -527,6 +534,24 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
         <TouchableOpacity
           style={styles.navItem}
+          onPress={handleNavigateToInvites}
+          activeOpacity={0.7}
+        >
+
+          <KeyRound
+            size={20}
+            color="#64748b"
+            strokeWidth={1.8}
+          />
+
+          <Text style={styles.navText}>
+            Convites
+          </Text>
+
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.navItem}
           activeOpacity={0.7}
         >
 
@@ -547,41 +572,21 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
         </TouchableOpacity>
 
-
         <TouchableOpacity
           style={styles.navItem}
-          onPress={handleNavigateToInvites}
+          onPress={handleNavigateToID}
           activeOpacity={0.7}
         >
 
-          <KeyRound
-            size={20}
+          <IdCard
+            size={30}
             color="#64748b"
             strokeWidth={1.8}
           />
 
           <Text style={styles.navText}>
-            Convites
-          </Text>
-
-        </TouchableOpacity>
-
-
-        <TouchableOpacity
-          style={styles.navItem}
-          onPress={handleNavigateToProfile}
-          activeOpacity={0.7}
-        >
-
-          <User
-            size={20}
-            color="#64748b"
-            strokeWidth={1.8}
-          />
-
-          <Text style={styles.navText}>
-            Perfil
-          </Text>
+            ID
+          </Text> 
 
         </TouchableOpacity>
 
@@ -590,521 +595,6 @@ export default function ResidentDashboardScreen({ navigation, route }) {
     </SafeAreaView>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// import React from 'react';
-// import {
-//   StyleSheet,
-//   View,
-//   Text,
-//   ScrollView,
-//   TouchableOpacity,
-//   SafeAreaView,
-//   Image,
-//   StatusBar,
-// } from 'react-native';
-
-// import {
-//   Building2,
-//   KeyRound,
-//   User,
-//   Pencil,
-//   Phone,
-//   Mail,
-//   Home,
-// } from 'lucide-react-native';
-// import { useState, useEffect } from 'react';
-
-// export default function ResidentDashboardScreen({ navigation }) {
-//   // const {loginToken} = route.params ?? {}
-//   const [dashboard_data, setDashboard_data] = useState(null);
-//   const [loading, setLoading] = useState(true);
-//   const [error, setError] = useState(null);
-
-//   useEffect(() => {
-//     const fetchDashboard = async () => {
-//       try {
-//         setLoading(true);
-//         setError(null);
-
-//         const response = await fetch(
-//           'http://127.0.0.1:8000/building/auth/client/dashboard/get/1'
-//         );
-
-//         if (!response.ok) {
-//           const errorData = await response.json().catch(() => null);
-
-//           throw new Error(
-//             errorData?.detail ||
-//             `Erro HTTP ${response.status}`
-//           );
-//         }
-
-//         const data = await response.json();
-
-//         console.log('DASHBOARD:', data);
-
-//         setDashboard_data(data);
-
-//       } catch (error) {
-//         console.error('Erro ao carregar dashboard:', error);
-
-//         setError(error.message);
-
-//       } finally {
-//         setLoading(false);
-//       }
-//     };
-
-//     fetchDashboard();
-//   }, []);
-
-
-
-
-//   // =========================================================
-//   // NAVEGAÇÃO
-//   // =========================================================
-//   const handleEditProfile = () => {
-//     navigation.navigate('EditResidentModal');
-//   };
-
-//   const handleNavigateToInvites = () => {
-//     navigation.navigate('InvitesScreen');
-//   };
-
-//   const handleNavigateToProfile = () => {
-//     navigation.navigate('Profile');
-//   };
-
-//   if (loading) {
-//     return (
-//       <SafeAreaView style={styles.safeArea}>
-//         <View style={styles.centerContainer}>
-//           <Text>A carregar dados...</Text>
-//         </View>
-//       </SafeAreaView>
-//     );
-//   }
-
-//   if (error) {
-//     return (
-//       <SafeAreaView style={styles.safeArea}>
-//         <View style={styles.centerContainer}>
-//           <Text style={styles.errorTitle}>
-//             Não foi possível carregar o painel
-//           </Text>
-
-//           <Text style={styles.errorText}>
-//             {error}
-//           </Text>
-
-//           <TouchableOpacity
-//             style={styles.retryButton}
-//             onPress={() => {
-//               // pode transformar o fetch numa função para reutilizar aqui
-//             }}
-//           >
-//             <Text style={styles.retryButtonText}>
-//               Tentar novamente
-//             </Text>
-//           </TouchableOpacity>
-//         </View>
-//       </SafeAreaView>
-//     );
-//   }
-
-//   if (!dashboard_data) {
-//     return null;
-//   }
-
-//   return (
-//     <SafeAreaView style={styles.safeArea}>
-//       <StatusBar
-//         barStyle="dark-content"
-//         backgroundColor="#ffffff"
-//       />
-
-//       {/* =====================================================
-//           TOP HEADER
-//       ====================================================== */}
-//       <View style={styles.header}>
-//         <Building2
-//           size={20}
-//           color="#1e3a8a"
-//           strokeWidth={2.2}
-//         />
-
-//         <Text style={styles.headerTitle}>
-//           Painel do Morador
-//         </Text>
-//       </View>
-
-//       {/* =====================================================
-//           CONTEÚDO PRINCIPAL
-//       ====================================================== */}
-//       <ScrollView
-//         style={styles.container}
-//         contentContainerStyle={styles.scrollContent}
-//         showsVerticalScrollIndicator={false}
-//       >
-
-//         {/* ===================================================
-//             CARTÃO 1: PERFIL DO MORADOR
-//         ==================================================== */}
-//         <View style={styles.card}>
-
-//           <View style={styles.profileHeaderRow}>
-
-//             {/* Avatar */}
-//             <View style={styles.avatarContainer}>
-//               <Image
-//                 source={{
-//                   uri: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200',
-//                 }}
-//                 style={styles.avatarImage}
-//               />
-//             </View>
-
-//             {/* Informações */}
-//             <View style={styles.profileInfo}>
-//               <Text style={styles.residentName}>
-//                 {dashboard_data['member'].name} {dashboard_data['member'].surname}
-//               </Text>
-
-//               <Text style={styles.docIdText}>
-//                 BI: {dashboard_data['member'].doc_id}
-//               </Text>
-//             </View>
-
-//             {/* Editar */}
-//             <TouchableOpacity
-//               style={styles.editButton}
-//               onPress={handleEditProfile}
-//               activeOpacity={0.7}
-//             >
-//               <Pencil
-//                 size={13}
-//                 color="#1e3a8a"
-//               />
-
-//               <Text style={styles.editButtonText}>
-//                 Editar
-//               </Text>
-//             </TouchableOpacity>
-
-//           </View>
-
-//           {/* =================================================
-//               CONTACTOS
-//           ================================================== */}
-//           <View style={styles.contactsRow}>
-
-//             {/* Telefone */}
-//             <View style={styles.contactBadge}>
-//               <Phone
-//                 size={14}
-//                 color="#64748b"
-//               />
-
-//               <View>
-//                 <Text style={styles.contactLabel}>
-//                   Telefone
-//                 </Text>
-
-//                 <Text style={styles.contactValue}>
-//                   {dashboard_data['member'].phone}
-//                 </Text>
-//               </View>
-//             </View>
-
-//             {/* E-mail */}
-//             <View style={styles.contactBadge}>
-//               <Mail
-//                 size={14}
-//                 color="#64748b"
-//               />
-
-//               <View>
-//                 <Text style={styles.contactLabel}>
-//                   E-mail
-//                 </Text>
-
-//                 <Text style={styles.contactValue}>
-//                   {dashboard_data['member'].email}
-//                 </Text>
-//               </View>
-//             </View>
-
-//           </View>
-//         </View>
-
-//         {/* ===================================================
-//             CARTÃO 2: DADOS DO APARTAMENTO
-//         ==================================================== */}
-//         <View style={styles.card}>
-
-//           <View style={styles.cardTitleRow}>
-//             <Home
-//               size={18}
-//               color="#1e3a8a"
-//             />
-
-//             <Text style={styles.cardTitle}>
-//               Dados do Apartamento
-//             </Text>
-//           </View>
-
-//           {/* Piso / Bloco + Número */}
-//           <View style={styles.twoColumnRow}>
-
-//             <View style={styles.infoBox}>
-//               <Text style={styles.infoBoxLabel}>
-//                 PISO / BLOCO
-//               </Text>
-
-//               <Text style={styles.infoBoxValueDark}>
-//                 {dashboard_data['apartment'].floor}
-//               </Text>
-//             </View>
-
-//             <View style={styles.infoBox}>
-//               <Text style={styles.infoBoxLabel}>
-//                 NÚMERO
-//               </Text>
-
-//               <Text style={styles.infoBoxValuePrimary}>
-//                 Apto: {dashboard_data['apartment'].number}
-//               </Text>
-//             </View>
-
-//           </View>
-
-//           {/* Tipo */}
-//           <View style={styles.subInfoBox}>
-
-//             <View style={styles.subInfoTop}>
-//               <Text style={styles.infoBoxLabel}>
-//                 TIPO
-//               </Text>
-
-//               <Text style={styles.subInfoValue}>
-//                 {dashboard_data['apartment'].type}
-//               </Text>
-//             </View>
-
-//             <Text style={styles.descriptionText}>
-//               {dashboard_data['apartment'].description}
-//             </Text>
-
-//           </View>
-
-//         </View>
-
-//         {/* ===================================================
-//             CARTÃO 3: DADOS DO EDIFÍCIO
-//         ==================================================== */}
-//         <View style={styles.card}>
-
-//           <View style={styles.cardTitleRow}>
-//             <Building2
-//               size={18}
-//               color="#1e3a8a"
-//             />
-
-//             <Text style={styles.cardTitle}>
-//               Dados do Edifício
-//             </Text>
-//           </View>
-
-//           {/* Informações principais */}
-//           <View style={styles.buildingHeader}>
-
-//             <Text style={styles.buildingName}>
-//               {dashboard_data['building'].name}
-//             </Text>
-
-//             <Text style={styles.descriptionText}>
-//               {dashboard_data['building'].description}
-//             </Text>
-
-//           </View>
-
-//           {/* =================================================
-//               CONTACTOS DO EDIFÍCIO
-//           ================================================== */}
-//           <View style={styles.keyValueList}>
-
-//             <View style={styles.keyValueRow}>
-//               <Text style={styles.keyText}>
-//                 Telefone
-//               </Text>
-
-//               <Text style={styles.valueText}>
-//                 {dashboard_data['contact'].phone}
-//               </Text>
-//             </View>
-
-//             <View style={styles.keyValueRow}>
-//               <Text style={styles.keyText}>
-//                 E-mail
-//               </Text>
-
-//               <Text
-//                 style={[
-//                   styles.valueText,
-//                   styles.linkText,
-//                 ]}
-//               >
-//                 {dashboard_data['contact'].email}
-//               </Text>
-//             </View>
-
-//             <View style={styles.keyValueRow}>
-//               <Text style={styles.keyText}>
-//                 Website
-//               </Text>
-
-//               <Text
-//                 style={[
-//                   styles.valueText,
-//                   styles.linkText,
-//                 ]}
-//               >
-//                 {dashboard_data['contact'].website}
-//               </Text>
-//             </View>
-
-//           </View>
-
-//           {/* =================================================
-//               ENDEREÇO
-//           ================================================== */}
-//           <Text style={styles.sectionDividerLabel}>
-//             ENDEREÇO
-//           </Text>
-
-//           <View style={styles.twoColumnRow}>
-
-//             <View style={styles.infoBox}>
-//               <Text style={styles.infoBoxLabel}>
-//                 Província / Cidade
-//               </Text>
-
-//               <Text style={styles.infoBoxValueDark}>
-//                 {dashboard_data['address'].province}
-//               </Text>
-//             </View>
-
-//             <View style={styles.infoBox}>
-//               <Text style={styles.infoBoxLabel}>
-//                 Bairro
-//               </Text>
-
-//               <Text style={styles.infoBoxValueDark}>
-//                 {dashboard_data['address'].nearby_hood}
-//               </Text>
-//             </View>
-
-//           </View>
-
-//           <View
-//             style={[
-//               styles.infoBox,
-//               styles.addressBox,
-//             ]}
-//           >
-//             <Text style={styles.infoBoxLabel}>
-//               Avenida & Número
-//             </Text>
-
-//             <Text style={styles.infoBoxValueDark}>
-//               {dashboard_data['address'].avenue} {dashboard_data['address'].number}
-//             </Text>
-//           </View>
-
-//         </View>
-
-//       </ScrollView>
-
-//       {/* =====================================================
-//           NAVEGAÇÃO INFERIOR
-//       ====================================================== */}
-//       <View style={styles.bottomNav}>
-
-//         {/* Início */}
-//         <TouchableOpacity
-//           style={styles.navItem}
-//           activeOpacity={0.7}
-//         >
-//           <Building2
-//             size={20}
-//             color="#1e3a8a"
-//             strokeWidth={2.4}
-//           />
-
-//           <Text
-//             style={[
-//               styles.navText,
-//               styles.navTextActive,
-//             ]}
-//           >
-//             Início
-//           </Text>
-//         </TouchableOpacity>
-
-//         {/* Convites */}
-//         <TouchableOpacity
-//           style={styles.navItem}
-//           onPress={handleNavigateToInvites}
-//           activeOpacity={0.7}
-//         >
-//           <KeyRound
-//             size={20}
-//             color="#64748b"
-//             strokeWidth={1.8}
-//           />
-
-//           <Text style={styles.navText}>
-//             Convites
-//           </Text>
-//         </TouchableOpacity>
-
-//         {/* Perfil */}
-//         <TouchableOpacity
-//           style={styles.navItem}
-//           onPress={handleNavigateToProfile}
-//           activeOpacity={0.7}
-//         >
-//           <User
-//             size={20}
-//             color="#64748b"
-//             strokeWidth={1.8}
-//           />
-
-//           <Text style={styles.navText}>
-//             Perfil
-//           </Text>
-//         </TouchableOpacity>
-
-//       </View>
-//     </SafeAreaView>
-//   );
-// }
-
 
 // ===========================================================
 // ESTILOS

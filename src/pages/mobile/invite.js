@@ -16,6 +16,7 @@ import {
   Building2,
   KeyRound,
   User,
+  IdCard,
   PlusCircle,
   Link,
   Image as ImageIcon,
@@ -25,7 +26,12 @@ import {
 } from 'lucide-react-native';
 
 
-export default function InvitesScreen({ navigation }) {
+export default function InvitesScreen({ navigation, route }) {
+  const { token } = route.params ?? {}
+  const navigationParams = {
+    token
+  }
+
 
   const [visitorName, setVisitorName] = useState('');
   const [date, setDate] = useState('12-Sep-2026');
@@ -318,13 +324,13 @@ export default function InvitesScreen({ navigation }) {
    */
   const goToHome = () => {
 
-    navigation.navigate('Home');
+    navigation.navigate('ResidentDashboardScreen', {
+      ...navigationParams
+    });
   };
 
-
-  const goToProfile = () => {
-
-    navigation.navigate('Profile');
+  const handleNavigateToID = () => {
+    navigation.navigate('Identification');
   };
 
 
@@ -747,22 +753,21 @@ export default function InvitesScreen({ navigation }) {
         </TouchableOpacity>
 
 
-        {/* Perfil */}
         <TouchableOpacity
           style={styles.navItem}
-          onPress={goToProfile}
+          onPress={handleNavigateToID}
           activeOpacity={0.7}
         >
 
-          <User
-            size={20}
+          <IdCard
+            size={30}
             color="#64748b"
             strokeWidth={1.8}
           />
 
-          <Text style={styles.navText}>
-            Perfil
-          </Text>
+          {/* <Text style={styles.navText}>
+                    ID
+                  </Text> */}
 
         </TouchableOpacity>
 

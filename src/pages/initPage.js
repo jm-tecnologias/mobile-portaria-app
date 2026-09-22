@@ -16,7 +16,7 @@ import LoginScreen from "./mobile/login";
 import InvitesScreen from "./mobile/invite";
 import ResidentDashboardScreen from "./mobile/dashboard";
 import ShareInviteScreen from "./mobile/shareinvite";
-import EditResidentModal from "./mobile/residentModals";
+import EditResidentModal from "./mobile/cancelInviteModal";
 
 
 
