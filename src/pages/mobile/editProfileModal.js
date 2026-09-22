@@ -33,6 +33,7 @@ export default function EditProfileModal  ({
   const navigationParams = {
     token
   }
+  
 
   const [docId, setDocId] = useState('110293847582M');
   const [nome, setNome] = useState('Anita');
