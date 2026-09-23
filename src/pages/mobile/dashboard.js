@@ -47,7 +47,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
         setError(null);
 
         const response = await fetch(
-          `http://127.0.0.1:8000/building/auth/user/client/dashboard/get/${token}`
+          `http://192.168.0.181:80/building/clients/members/dashboard/get/${token}`
         );
 
         if (!response.ok) {
@@ -64,7 +64,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
         const data = await response.json();
 
-        // console.log('DASHBOARD DATA:', data);
+        
 
         setDashboard_data(data);
 
@@ -635,7 +635,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
           apartment: dashboard_data?.apartment?.number,
           photo_url: dashboard_data?.member?.photo_url,
         }}
-        imageUri={dashboard_data?.member?.identification_image_url}
+        imageUri={dashboard_data?.member?.barcode_url}
       />
 
     </SafeAreaView>
