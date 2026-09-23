@@ -21,8 +21,13 @@ import {
   Mail,
   Home,
 } from 'lucide-react-native';
+import EditProfileModal from './editProfileModal';
+import ResidentIDModal from './residentIDModal';
 
 export default function ResidentDashboardScreen({ navigation, route }) {
+  const [editProfileVisible, setEditProfileVisible] = useState(false)
+  const [idModalVisible, setIdModalVisible] = useState(false);
+
   const { token } = route.params ?? {};
   const navigationParams = {
     token
@@ -158,16 +163,36 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
   }
 
+  // =========================================================
+  // MODALS
+  // =========================================================
+  const handleEditProfile = () => {
+    setEditProfileVisible(true)
+  };
+  const handleCloseEditProfile = () => {
+    setEditProfileVisible(false)
+  };
+  const handleSaveProfile = () => {
+    console.log('Funcao por sem implementada')
+  }
+
+  const handleOpenID = () => {
+    setIdModalVisible(true);
+  };
+  const handleCloseID = () => {
+    setIdModalVisible(false);
+  };
+
 
   // =========================================================
   // NAVEGAÇÃO
   // =========================================================
 
-  const handleEditProfile = () => {
-    navigation.navigate('EditProfileModal', {
-      ...navigationParams
-    });
-  };
+  // const handleEditProfile = () => {
+  //   navigation.navigate('EditProfileModal', {
+  //     ...navigationParams
+  //   });
+  // };
 
   const handleNavigateToInvites = () => {
     navigation.navigate('InvitesScreen', {
@@ -574,7 +599,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
         <TouchableOpacity
           style={styles.navItem}
-          onPress={handleNavigateToID}
+          onPress={handleOpenID}
           activeOpacity={0.7}
         >
 
@@ -586,14 +611,38 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
           <Text style={styles.navText}>
             ID
-          </Text> 
+          </Text>
 
         </TouchableOpacity>
 
       </View>
+      <EditProfileModal
+        visible={editProfileVisible}
+        onClose={handleCloseEditProfile}
+        onSave={handleSaveProfile}
+      />
+
+      <ResidentIDModal
+        visible={idModalVisible}
+        onClose={handleCloseID}
+        resident={{
+          name: dashboard_data?.member?.name,
+          surname: dashboard_data?.member?.surname,
+          doc_id: dashboard_data?.member?.doc_id,
+          phone: dashboard_data?.member?.phone,
+          email: dashboard_data?.member?.email,
+          building_name: dashboard_data?.building?.name,
+          apartment: dashboard_data?.apartment?.number,
+          photo_url: dashboard_data?.member?.photo_url,
+        }}
+        imageUri={dashboard_data?.member?.identification_image_url}
+      />
 
     </SafeAreaView>
+
+
   );
+
 }
 
 // ===========================================================

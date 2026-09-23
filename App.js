@@ -5,7 +5,7 @@ import LoginScreen from "./src/pages/mobile/login";
 import InvitesScreen from "./src/pages/mobile/invite";
 import ResidentDashboardScreen from "./src/pages/mobile/dashboard";
 import ShareInviteScreen from "./src/pages/mobile/shareinvite";
-import EditProfileModal from "./src/pages/mobile/editProfileModal";
+// import EditProfileModal from "./src/pages/mobile/editProfileModal";
 import CancelInviteModal from "./src/pages/mobile/cancelInviteModal";
 
 const Stack = createNativeStackNavigator();
@@ -26,7 +26,7 @@ const App = () => {
         <Stack.Screen name="InvitesScreen" component={InvitesScreen} />
         <Stack.Screen name="ShareInviteScreen" component={ShareInviteScreen} />
         <Stack.Screen name="CancelInviteModal" component={CancelInviteModal} />
-        <Stack.Screen name="EditProfileModal" component={EditProfileModal} />
+        {/* <Stack.Screen name="EditProfileModal" component={EditProfileModal} /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );
