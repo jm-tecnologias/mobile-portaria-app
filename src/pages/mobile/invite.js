@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import {
   StyleSheet,
@@ -24,19 +24,164 @@ import {
   Calendar,
   Clock,
 } from 'lucide-react-native';
+import ResidentIDModal from './residentIDModal';
 
 
 export default function InvitesScreen({ navigation, route }) {
+  const [idModalVisible, setIdModalVisible] = useState(false);
   const { token } = route.params ?? {}
   const navigationParams = {
     token
   }
 
+  const [dataSet, setDataSet] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
 
   const [visitorName, setVisitorName] = useState('');
-  const [date, setDate] = useState('12-Sep-2026');
-  const [time, setTime] = useState('12:00');
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
   const [description, setDescription] = useState('');
+
+
+  useEffect(() => {
+
+    const fetchDashboard = async (token) => {
+
+      try {
+
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(
+          `http://192.168.0.181:80/building/clients/members/dashboard/get/${token}`
+        );
+
+        if (!response.ok) {
+
+          const errorData = await response
+            .json()
+            .catch(() => null);
+
+          throw new Error(
+            errorData?.detail ||
+            `Erro HTTP ${response.status}`
+          );
+        }
+
+        // const data = JSON.stringify(dados, null, 2);
+        const data = await response.json();
+        // console.log('TESTE: ',data.member)
+
+
+        setDataSet(data);
+
+      } catch (error) {
+
+        console.error(
+          'Erro ao carregar dashboard:',
+          error
+        );
+
+        setError(error.message);
+
+      } finally {
+
+        setLoading(false);
+
+      }
+
+    };
+
+    fetchDashboard(token.access_token);
+
+  }, []);
+
+
+  // =========================================================
+  // LOADING
+  // =========================================================
+
+  if (loading) {
+
+    return (
+      <SafeAreaView style={styles.safeArea}>
+
+        <View style={styles.centerContainer}>
+
+          <Text style={styles.loadingText}>
+            A carregar dados...
+          </Text>
+
+        </View>
+
+      </SafeAreaView>
+    );
+
+  }
+
+
+  // =========================================================
+  // ERRO
+  // =========================================================
+
+  if (error) {
+
+    return (
+      <SafeAreaView style={styles.safeArea}>
+
+        <View style={styles.centerContainer}>
+
+          <Text style={styles.errorTitle}>
+            Erro ao carregar o painel
+          </Text>
+
+          <Text style={styles.errorText}>
+            {error}
+          </Text>
+
+        </View>
+
+      </SafeAreaView>
+    );
+
+  }
+
+
+  // =========================================================
+  // SEM DADOS
+  // =========================================================
+
+  if (!dataSet) {
+
+    return (
+      <SafeAreaView style={styles.safeArea}>
+
+        <View style={styles.centerContainer}>
+
+          <Text>
+            Nenhum dado encontrado.
+          </Text>
+
+        </View>
+
+      </SafeAreaView>
+    );
+
+  }
+
+  
+  // =========================================================
+  // MODALS
+  // =========================================================
+  const handleOpenID = () => {
+    setIdModalVisible(true);
+  };
+  const handleCloseID = () => {
+    setIdModalVisible(false);
+  };
+
 
 
   /*
@@ -319,6 +464,7 @@ export default function InvitesScreen({ navigation, route }) {
   };
 
 
+
   /*
    * Navegação
    */
@@ -368,7 +514,7 @@ export default function InvitesScreen({ navigation, route }) {
         <View style={styles.unitBadge}>
 
           <Text style={styles.unitBadgeText}>
-            Apt 402
+            Apt { dataSet?.apartment?.number}
           </Text>
 
         </View>
@@ -456,6 +602,8 @@ export default function InvitesScreen({ navigation, route }) {
               <View style={styles.iconInputContainer}>
 
                 <TextInput
+                  placeholder='AAAA-MM-DD'
+                  placeholderTextColor="#94a3b8"
                   style={styles.inputWithIcon}
                   value={date}
                   onChangeText={setDate}
@@ -489,6 +637,8 @@ export default function InvitesScreen({ navigation, route }) {
               <View style={styles.iconInputContainer}>
 
                 <TextInput
+                  placeholder='HH:MM'
+                  placeholderTextColor="#94a3b8"
                   style={styles.inputWithIcon}
                   value={time}
                   onChangeText={setTime}
@@ -556,7 +706,7 @@ export default function InvitesScreen({ navigation, route }) {
             </Text>
 
             {renderStatusBadge(
-              'Esperando Check In'
+              dataSet?.member?.visitors[0].status
             )}
 
           </View>
@@ -565,11 +715,15 @@ export default function InvitesScreen({ navigation, route }) {
           <View style={styles.currentInviteInfo}>
 
             <Text style={styles.currentVisitorName}>
-              Carlos Manuel Tembe
+              {dataSet?.member?.visitors[0].name}
             </Text>
 
             <Text style={styles.currentVisitorMeta}>
-              Hoje, 19:30 · Almoço em família
+              Data/Hora: {dataSet?.member?.visitors[0].date} / 
+              {dataSet?.member?.visitors[0].time} 
+            </Text>
+            <Text style={styles.currentVisitorMeta}>
+              * {dataSet?.member?.visitors[0].description}
             </Text>
 
           </View>
@@ -652,7 +806,7 @@ export default function InvitesScreen({ navigation, route }) {
             </Text>
 
             <Text style={styles.historyCount}>
-              {historyItems.length} convites
+              {dataSet?.member?.visitors.length} convites
             </Text>
 
           </View>
@@ -660,7 +814,7 @@ export default function InvitesScreen({ navigation, route }) {
 
           <View style={styles.historyList}>
 
-            {historyItems.map(
+            {dataSet?.member?.visitors.map(
               (item, index) => (
 
                 <View
@@ -668,20 +822,19 @@ export default function InvitesScreen({ navigation, route }) {
                   style={[
                     styles.historyItemRow,
 
-                    index < historyItems.length - 1
+                    index < dataSet?.member?.visitors.length - 1
                       ? styles.historyItemBorder
                       : null,
                   ]}
                 >
-
                   <View style={styles.historyItemLeft}>
 
                     <Text style={styles.historyVisitorName}>
-                      {item.visitorName}
+                      {item.name}
                     </Text>
 
                     <Text style={styles.historyDate}>
-                      {item.date}
+                      {item.date} / {item.time}
                     </Text>
 
                   </View>
@@ -755,7 +908,7 @@ export default function InvitesScreen({ navigation, route }) {
 
         <TouchableOpacity
           style={styles.navItem}
-          onPress={handleNavigateToID}
+          onPress={handleOpenID}
           activeOpacity={0.7}
         >
 
@@ -765,13 +918,28 @@ export default function InvitesScreen({ navigation, route }) {
             strokeWidth={1.8}
           />
 
-          {/* <Text style={styles.navText}>
-                    ID
-                  </Text> */}
+          <Text style={styles.navText}>
+            ID
+          </Text>
 
         </TouchableOpacity>
 
       </View>
+      <ResidentIDModal
+        visible={idModalVisible}
+        onClose={handleCloseID}
+        resident={{
+          name: dataSet?.member?.name,
+          surname: dataSet?.member?.surname,
+          doc_id: dataSet?.member?.doc_id,
+          phone: dataSet?.member?.phone,
+          email: dataSet?.member?.email,
+          building_name: dataSet?.building?.name,
+          apartment: dataSet?.apartment?.number,
+          photo_url: dataSet?.member?.photo_url,
+        }}
+        imageUri={dataSet?.member?.barcode_url}
+      />
 
     </SafeAreaView>
   );
@@ -783,6 +951,31 @@ export default function InvitesScreen({ navigation, route }) {
    ========================================= */
 
 const styles = StyleSheet.create({
+
+  centerContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+
+  loadingText: {
+    fontSize: 16,
+    color: '#64748b',
+  },
+
+  errorTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#dc2626',
+    marginBottom: 8,
+  },
+
+  errorText: {
+    fontSize: 14,
+    color: '#64748b',
+    textAlign: 'center',
+  },
 
   safeArea: {
     flex: 1,

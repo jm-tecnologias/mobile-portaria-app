@@ -33,7 +33,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
     token
   }
 
-  const [dashboard_data, setDashboard_data] = useState(null);
+  const [dataSet, setDataSet] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -61,12 +61,11 @@ export default function ResidentDashboardScreen({ navigation, route }) {
             `Erro HTTP ${response.status}`
           );
         }
-
+        // const data = JSON.stringify(dados, null, 2);
         const data = await response.json();
+        console.log('TESTE: ',data.member)
 
-        
-
-        setDashboard_data(data);
+        setDataSet(data);
 
       } catch (error) {
 
@@ -145,7 +144,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
   // SEM DADOS
   // =========================================================
 
-  if (!dashboard_data) {
+  if (!dataSet) {
 
     return (
       <SafeAreaView style={styles.safeArea}>
@@ -261,16 +260,16 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
               <Text style={styles.residentName}>
 
-                {dashboard_data?.member?.name}{' '}
+                {dataSet?.member?.name}{' '}
 
-                {dashboard_data?.member?.surname}
+                {dataSet?.member?.surname}
 
               </Text>
 
 
               <Text style={styles.docIdText}>
 
-                BI: {dashboard_data?.member?.doc_id}
+                BI: {dataSet?.member?.doc_id}
 
               </Text>
 
@@ -313,7 +312,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
                 </Text>
 
                 <Text style={styles.contactValue}>
-                  {dashboard_data?.member?.phone}
+                  {dataSet?.member?.phone}
                 </Text>
 
               </View>
@@ -335,7 +334,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
                 </Text>
 
                 <Text style={styles.contactValue}>
-                  {dashboard_data?.member?.email}
+                  {dataSet?.member?.email}
                 </Text>
 
               </View>
@@ -374,7 +373,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.infoBoxValueDark}>
-                {dashboard_data?.apartment?.floor}
+                {dataSet?.apartment?.floor}
               </Text>
 
             </View>
@@ -387,7 +386,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.infoBoxValuePrimary}>
-                Apto: {dashboard_data?.apartment?.number}
+                Apto: {dataSet?.apartment?.number}
               </Text>
 
             </View>
@@ -404,13 +403,13 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.subInfoValue}>
-                {dashboard_data?.apartment?.type}
+                {dataSet?.apartment?.type}
               </Text>
 
             </View>
 
             <Text style={styles.descriptionText}>
-              {dashboard_data?.apartment?.description}
+              {dataSet?.apartment?.description}
             </Text>
 
           </View>
@@ -439,11 +438,11 @@ export default function ResidentDashboardScreen({ navigation, route }) {
           <View style={styles.buildingHeader}>
 
             <Text style={styles.buildingName}>
-              {dashboard_data?.building?.name}
+              {dataSet?.building?.name}
             </Text>
 
             <Text style={styles.descriptionText}>
-              {dashboard_data?.building?.description}
+              {dataSet?.building?.description}
             </Text>
 
           </View>
@@ -458,7 +457,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.valueText}>
-                {dashboard_data?.contact?.phone}
+                {dataSet?.contact?.phone}
               </Text>
 
             </View>
@@ -471,7 +470,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.valueText}>
-                {dashboard_data?.contact?.email}
+                {dataSet?.contact?.email}
               </Text>
 
             </View>
@@ -484,7 +483,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.valueText}>
-                {dashboard_data?.contact?.website}
+                {dataSet?.contact?.website}
               </Text>
 
             </View>
@@ -506,7 +505,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.infoBoxValueDark}>
-                {dashboard_data?.address?.province}
+                {dataSet?.address?.province}
               </Text>
 
             </View>
@@ -519,7 +518,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
               </Text>
 
               <Text style={styles.infoBoxValueDark}>
-                {dashboard_data?.address?.nearby_hood}
+                {dataSet?.address?.nearby_hood}
               </Text>
 
             </View>
@@ -540,9 +539,9 @@ export default function ResidentDashboardScreen({ navigation, route }) {
 
             <Text style={styles.infoBoxValueDark}>
 
-              {dashboard_data?.address?.avenue}{' '}
+              {dataSet?.address?.avenue}{' '}
 
-              {dashboard_data?.address?.number}
+              {dataSet?.address?.number}
 
             </Text>
 
@@ -626,16 +625,16 @@ export default function ResidentDashboardScreen({ navigation, route }) {
         visible={idModalVisible}
         onClose={handleCloseID}
         resident={{
-          name: dashboard_data?.member?.name,
-          surname: dashboard_data?.member?.surname,
-          doc_id: dashboard_data?.member?.doc_id,
-          phone: dashboard_data?.member?.phone,
-          email: dashboard_data?.member?.email,
-          building_name: dashboard_data?.building?.name,
-          apartment: dashboard_data?.apartment?.number,
-          photo_url: dashboard_data?.member?.photo_url,
+          name: dataSet?.member?.name,
+          surname: dataSet?.member?.surname,
+          doc_id: dataSet?.member?.doc_id,
+          phone: dataSet?.member?.phone,
+          email: dataSet?.member?.email,
+          building_name: dataSet?.building?.name,
+          apartment: dataSet?.apartment?.number,
+          photo_url: dataSet?.member?.photo_url,
         }}
-        imageUri={dashboard_data?.member?.barcode_url}
+        imageUri={dataSet?.member?.barcode_url}
       />
 
     </SafeAreaView>
