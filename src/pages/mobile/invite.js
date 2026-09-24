@@ -15,7 +15,6 @@ import {
 import {
   Building2,
   KeyRound,
-  User,
   IdCard,
   PlusCircle,
   Link,
@@ -475,9 +474,6 @@ export default function InvitesScreen({ navigation, route }) {
     });
   };
 
-  const handleNavigateToID = () => {
-    navigation.navigate('Identification');
-  };
 
 
   return (
@@ -719,8 +715,8 @@ export default function InvitesScreen({ navigation, route }) {
             </Text>
 
             <Text style={styles.currentVisitorMeta}>
-              Data/Hora: {dataSet?.member?.visitors[0].date} / 
-              {dataSet?.member?.visitors[0].time} 
+              Data/Hora: {dataSet?.member?.visitors[0].visitor_date} / 
+              {dataSet?.member?.visitors[0].visitor_time} 
             </Text>
             <Text style={styles.currentVisitorMeta}>
               * {dataSet?.member?.visitors[0].description}
@@ -834,7 +830,7 @@ export default function InvitesScreen({ navigation, route }) {
                     </Text>
 
                     <Text style={styles.historyDate}>
-                      {item.date} / {item.time}
+                      {item.visitor_date} / {item.visitor_time}
                     </Text>
 
                   </View>

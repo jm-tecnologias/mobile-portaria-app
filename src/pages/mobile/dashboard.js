@@ -63,7 +63,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
         }
         // const data = JSON.stringify(dados, null, 2);
         const data = await response.json();
-        console.log('TESTE: ',data.member)
+        // console.log('TESTE: ',data.member)
 
         setDataSet(data);
 
