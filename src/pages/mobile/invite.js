@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 
 import {
+  FlatList,
   StyleSheet,
   View,
   Text,
@@ -39,8 +40,9 @@ export default function InvitesScreen({ navigation, route }) {
 
 
   const [visitorName, setVisitorName] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [visitorPhone, setVisitorPhone] = useState('');
+  const [visitorDate, setDate] = useState('');
+  const [visitorTime, setTime] = useState('');
   const [description, setDescription] = useState('');
 
 
@@ -170,7 +172,7 @@ export default function InvitesScreen({ navigation, route }) {
 
   }
 
-  
+
   // =========================================================
   // MODALS
   // =========================================================
@@ -183,38 +185,7 @@ export default function InvitesScreen({ navigation, route }) {
 
 
 
-  /*
-   * Histórico de convites
-   *
-   * Em JavaScript não precisamos declarar
-   * interface ou type.
-   */
-  const historyItems = [
-    {
-      id: '1',
-      visitorName: 'Marcos Macuácua',
-      date: '12 Out, 10:00',
-      status: 'Esperando Check Out',
-    },
-    {
-      id: '2',
-      visitorName: 'Sofia Ribeiro',
-      date: 'Ontem, 14:00',
-      status: 'Visita Concluída',
-    },
-    {
-      id: '3',
-      visitorName: 'Empresa Limpeza Express',
-      date: '10 Out, 09:00',
-      status: 'Convite Expirado',
-    },
-    {
-      id: '4',
-      visitorName: 'João Pedro Alves',
-      date: '08 Out, 18:00',
-      status: 'Convite Cancelado',
-    },
-  ];
+
 
 
   /*
@@ -361,13 +332,22 @@ export default function InvitesScreen({ navigation, route }) {
    */
   const handleCreateInvite = () => {
 
+    const conviteData = {
+      member_id: dataSet?.member?.id,
+      name: visitorName,
+      phone: visitorPhone,
+      visitor_date: visitorDate,
+      visitor_time: visitorTime,
+      description: description
+    }
+    console.log(conviteData)
+
     if (!visitorName.trim()) {
 
       Alert.alert(
         'Atenção',
         'Introduza o nome do visitante.'
       );
-
       return;
     }
 
@@ -392,8 +372,6 @@ export default function InvitesScreen({ navigation, route }) {
 
       return;
     }
-
-
     /*
      * Por enquanto apenas simulamos
      * a criação do convite.
@@ -401,6 +379,7 @@ export default function InvitesScreen({ navigation, route }) {
      * Posteriormente esta função poderá
      * chamar a API FastAPI.
      */
+
 
     Alert.alert(
       'Convite Emitido',
@@ -510,7 +489,7 @@ export default function InvitesScreen({ navigation, route }) {
         <View style={styles.unitBadge}>
 
           <Text style={styles.unitBadgeText}>
-            Apt { dataSet?.apartment?.number}
+            Apt {dataSet?.apartment?.number}
           </Text>
 
         </View>
@@ -573,6 +552,27 @@ export default function InvitesScreen({ navigation, route }) {
               onChangeText={setVisitorName}
               autoCapitalize="words"
               autoCorrect={false}
+              keyboardType='default'
+            />
+
+          </View>
+
+          {/* Telefone */}
+          <View style={styles.formGroup}>
+
+            <Text style={styles.inputLabel}>
+              Contacto
+            </Text>
+
+            <TextInput
+              style={styles.input}
+              placeholder="Ex: 84 xxx xxxx"
+              placeholderTextColor="#94a3b8"
+              value={visitorPhone}
+              onChangeText={setVisitorPhone}
+              autoCapitalize="words"
+              autoCorrect={false}
+              keyboardType='default'
             />
 
           </View>
@@ -601,8 +601,10 @@ export default function InvitesScreen({ navigation, route }) {
                   placeholder='AAAA-MM-DD'
                   placeholderTextColor="#94a3b8"
                   style={styles.inputWithIcon}
-                  value={date}
+                  value={visitorDate}
                   onChangeText={setDate}
+                  keyboardType='default'
+
                 />
 
                 <Calendar
@@ -636,8 +638,10 @@ export default function InvitesScreen({ navigation, route }) {
                   placeholder='HH:MM'
                   placeholderTextColor="#94a3b8"
                   style={styles.inputWithIcon}
-                  value={time}
+                  value={visitorTime}
                   onChangeText={setTime}
+                  keyboardType='default'
+
                 />
 
                 <Clock
@@ -668,6 +672,8 @@ export default function InvitesScreen({ navigation, route }) {
               onChangeText={setDescription}
               autoCapitalize="sentences"
               multiline={false}
+              keyboardType='default'
+
             />
 
           </View>
@@ -702,7 +708,7 @@ export default function InvitesScreen({ navigation, route }) {
             </Text>
 
             {renderStatusBadge(
-              dataSet?.member?.visitors[0].status
+              dataSet?.member?.visitors[0]?.status
             )}
 
           </View>
@@ -711,15 +717,15 @@ export default function InvitesScreen({ navigation, route }) {
           <View style={styles.currentInviteInfo}>
 
             <Text style={styles.currentVisitorName}>
-              {dataSet?.member?.visitors[0].name}
+              {dataSet?.member?.visitors[0]?.name}
             </Text>
 
             <Text style={styles.currentVisitorMeta}>
-              Data/Hora: {dataSet?.member?.visitors[0].visitor_date} / 
-              {dataSet?.member?.visitors[0].visitor_time} 
+              Data/Hora: {dataSet?.member?.visitors[0]?.visitor_date} /
+              {dataSet?.member?.visitors[0]?.visitor_time}
             </Text>
             <Text style={styles.currentVisitorMeta}>
-              * {dataSet?.member?.visitors[0].description}
+              * {dataSet?.member?.visitors[0]?.description}
             </Text>
 
           </View>
@@ -807,9 +813,7 @@ export default function InvitesScreen({ navigation, route }) {
 
           </View>
 
-
-          <View style={styles.historyList}>
-
+         <View style={styles.historyList}>
             {dataSet?.member?.visitors.map(
               (item, index) => (
 
