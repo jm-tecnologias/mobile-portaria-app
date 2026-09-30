@@ -23,6 +23,7 @@ import {
 } from 'lucide-react-native';
 import EditProfileModal from './editProfileModal';
 import ResidentIDModal from './residentIDModal';
+import { fetchDashboard } from '../../service/_dashboard-events';
 
 export default function ResidentDashboardScreen({ navigation, route }) {
   const [editProfileVisible, setEditProfileVisible] = useState(false)
@@ -38,56 +39,27 @@ export default function ResidentDashboardScreen({ navigation, route }) {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-
-    const fetchDashboard = async (token) => {
-
-      try {
-
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(
-          `http://192.168.0.181:80/building/clients/members/dashboard/get/${token}`
-        );
-
-        if (!response.ok) {
-
-          const errorData = await response
-            .json()
-            .catch(() => null);
-
-          throw new Error(
-            errorData?.detail ||
-            `Erro HTTP ${response.status}`
-          );
-        }
-        // const data = JSON.stringify(dados, null, 2);
-        const data = await response.json();
-        // console.log('TESTE: ',data.member)
-
-        setDataSet(data);
-
-      } catch (error) {
-
-        console.error(
-          'Erro ao carregar dashboard:',
-          error
-        );
-
-        setError(error.message);
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
-
-    fetchDashboard(token.access_token);
-
+    loadDashboard()
   }, []);
 
+  const loadDashboard = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await fetchDashboard(token.access_token)
+      setDataSet(data)
+
+    } catch (error) {
+
+      console.error(
+        'Erro ao carregar dashboard:',
+        error
+      );
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
 
 
   // =========================================================
