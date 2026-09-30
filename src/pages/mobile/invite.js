@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
 import {
-  FlatList,
   StyleSheet,
   View,
   Text,
@@ -25,6 +24,8 @@ import {
   Clock,
 } from 'lucide-react-native';
 import ResidentIDModal from './residentIDModal';
+import { createInvite } from '../../service/_invite-events';
+import { fetchDashboard } from '../../service/_dashboard-events';
 
 
 export default function InvitesScreen({ navigation, route }) {
@@ -45,59 +46,29 @@ export default function InvitesScreen({ navigation, route }) {
   const [visitorTime, setTime] = useState('');
   const [description, setDescription] = useState('');
 
-
   useEffect(() => {
-
-    const fetchDashboard = async (token) => {
-
-      try {
-
-        setLoading(true);
-        setError(null);
-
-        const response = await fetch(
-          `http://192.168.0.181:80/building/clients/members/dashboard/get/${token}`
-        );
-
-        if (!response.ok) {
-
-          const errorData = await response
-            .json()
-            .catch(() => null);
-
-          throw new Error(
-            errorData?.detail ||
-            `Erro HTTP ${response.status}`
-          );
-        }
-
-        // const data = JSON.stringify(dados, null, 2);
-        const data = await response.json();
-        // console.log('TESTE: ',data.member)
-
-
-        setDataSet(data);
-
-      } catch (error) {
-
-        console.error(
-          'Erro ao carregar dashboard:',
-          error
-        );
-
-        setError(error.message);
-
-      } finally {
-
-        setLoading(false);
-
-      }
-
-    };
-
-    fetchDashboard(token.access_token);
-
+    loadDashboard()
   }, []);
+
+  const loadDashboard = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const data = await fetchDashboard(token.access_token)
+      setDataSet(data)
+    } catch (error) {
+      console.error(
+        'Erro ao carregar dashboard:',
+        error
+      );
+      setError(error.message);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+
 
 
   // =========================================================
@@ -330,7 +301,31 @@ export default function InvitesScreen({ navigation, route }) {
   /*
    * Emitir convite
    */
-  const handleCreateInvite = () => {
+  const handleCreateInvite = async () => {
+
+    if (!visitorName.trim()) {
+      Alert.alert(
+        'Atenção',
+        'Introduza o nome do visitante.'
+      );
+      return;
+    }
+
+    if (!visitorDate.trim()) {
+      Alert.alert(
+        'Atenção',
+        'Introduza a data da visita.'
+      );
+      return;
+    }
+
+    if (!visitorTime.trim()) {
+      Alert.alert(
+        'Atenção',
+        'Introduza a hora da visita.'
+      );
+      return;
+    }
 
     const conviteData = {
       member_id: dataSet?.member?.id,
@@ -340,51 +335,22 @@ export default function InvitesScreen({ navigation, route }) {
       visitor_time: visitorTime,
       description: description
     }
-    console.log(conviteData)
 
-    if (!visitorName.trim()) {
-
-      Alert.alert(
-        'Atenção',
-        'Introduza o nome do visitante.'
-      );
-      return;
-    }
-
-
-    if (!date.trim()) {
-
-      Alert.alert(
-        'Atenção',
-        'Introduza a data da visita.'
-      );
-
-      return;
-    }
-
-
-    if (!time.trim()) {
-
-      Alert.alert(
-        'Atenção',
-        'Introduza a hora da visita.'
-      );
-
-      return;
-    }
-    /*
-     * Por enquanto apenas simulamos
-     * a criação do convite.
-     *
-     * Posteriormente esta função poderá
-     * chamar a API FastAPI.
-     */
-
+    const data = createInvite(conviteData)
 
     Alert.alert(
       'Convite Emitido',
       `Convite criado para ${visitorName}.`
     );
+
+    // chamar loadDashboard()
+    loadDashboard()
+// Reset Fields
+    setVisitorName('')
+    setVisitorPhone('');
+    setDate('');
+    setTime('');
+    setDescription('');
   };
 
 
@@ -813,7 +779,7 @@ export default function InvitesScreen({ navigation, route }) {
 
           </View>
 
-         <View style={styles.historyList}>
+          <View style={styles.historyList}>
             {dataSet?.member?.visitors.map(
               (item, index) => (
 
