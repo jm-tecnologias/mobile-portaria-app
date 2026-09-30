@@ -57,7 +57,7 @@ export default function ResidentIDModal({
                                     </Text>
 
                                     <Text style={styles.subtitle}>
-                                        Identificação do Morador
+                                        Identificação do Anfitrião
                                     </Text>
                                 </View>
 
@@ -105,7 +105,7 @@ export default function ResidentIDModal({
                                 </Text>
 
                                 <Text style={styles.residentType}>
-                                    MORADOR
+                                    ANFITRIÃO
                                 </Text>
 
                             </View>

@@ -199,7 +199,7 @@ export default function ResidentDashboardScreen({ navigation, route }) {
         />
 
         <Text style={styles.headerTitle}>
-          Painel do Morador
+          Painel do Anfitrião
         </Text>
 
       </View>
