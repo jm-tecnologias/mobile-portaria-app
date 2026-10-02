@@ -1,7 +1,7 @@
 const API_URL = 'http://127.0.0.1:8000'
 export const fetchDashboard = async (token) => {
     const response = await fetch(
-        `${API_URL}/building/clients/members/dashboard/get/${token}`, {
+        `${API_URL}/client/member/dashboard/get/${token}`, {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
