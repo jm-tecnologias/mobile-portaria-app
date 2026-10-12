@@ -13,6 +13,7 @@ import {
 
 import {
   X,
+  User,
   Camera,
   Check,
 } from 'lucide-react-native';
@@ -24,32 +25,35 @@ import {
 
 export default function EditProfileModal  ({
   visible,
+  profile,
   onClose,
   onSave,
 }) {
+  
+  if(!profile){
+    return null
+  }
 
-  const [docId, setDocId] = useState('110293847582M');
-  const [nome, setNome] = useState('Anita');
-  const [apelido, setApelido] = useState('Sharma');
-  const [telefone, setTelefone] = useState('+258 82 998 8776');
-  const [email, setEmail] = useState(
-    'anita.sharma@horizonte.co.mz'
-  );
+  const [docId, setDocId] = useState('');
+  const [nome, setNome] = useState('');
+  const [apelido, setApelido] = useState('');
+  const [telefone, setTelefone] = useState('');
+  const [url_photo, setUrlPhoto] = useState('');
+  const [email, setEmail] = useState('');
 
 
   const handleSave = () => {
 
     const data = {
-      docId,
-      nome,
-      apelido,
       telefone,
       email,
+      url_photo,
     };
 
     if (onSave) {
       onSave(data);
     }
+    console.log('Teste')
   };
 
 
@@ -79,7 +83,7 @@ export default function EditProfileModal  ({
                 <View>
 
                   <Text style={styles.modalTitle}>
-                    Editar Morador
+                    Editar Anfitrião
                   </Text>
 
                   <Text style={styles.modalSubtitle}>
@@ -109,15 +113,21 @@ export default function EditProfileModal  ({
               <View style={styles.photoUploadRow}>
 
                 <View style={styles.photoContainer}>
-
-                  <Image
-                    source={{
-                      uri:
-                        'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=200',
-                    }}
-                    style={styles.photoImage}
-                  />
-
+                  {profile.photo_url ? (
+                    <Image
+                      source={{
+                        uri: profile.photo_url
+                      }}
+                      value={profile.photo_url}
+                      onChangeText={setUrlPhoto}
+                      style={styles.photoImage}
+                    />
+                  ) : (
+                    <User
+                      size={64}
+                      color="#64748b"
+                    />
+                  )}
                   <View style={styles.cameraIconBadge}>
 
                     <Camera
@@ -164,14 +174,10 @@ export default function EditProfileModal  ({
                   <Text style={styles.fieldLabel}>
                     DOC.-ID (IDENTIFICAÇÃO)
                   </Text>
-
-                  <TextInput
-                    style={styles.textInput}
-                    value={docId}
-                    onChangeText={setDocId}
-                    placeholder="Número do documento"
+        
+                  <TextInput style={styles.textInput}
+                    value={profile.doc_id}
                   />
-
                 </View>
 
 
@@ -189,12 +195,9 @@ export default function EditProfileModal  ({
                       NOME
                     </Text>
 
-                    <TextInput
-                      style={styles.textInput}
-                      value={nome}
-                      onChangeText={setNome}
-                      placeholder="Nome"
-                    />
+                    <TextInput style={styles.textInput}
+                    value={profile.name}
+                  />
 
                   </View>
 
@@ -210,12 +213,9 @@ export default function EditProfileModal  ({
                       APELIDO
                     </Text>
 
-                    <TextInput
-                      style={styles.textInput}
-                      value={apelido}
-                      onChangeText={setApelido}
-                      placeholder="Apelido"
-                    />
+                    <TextInput style={styles.textInput}
+                    value={profile.surname}
+                  />
 
                   </View>
 
@@ -231,7 +231,7 @@ export default function EditProfileModal  ({
 
                   <TextInput
                     style={styles.textInput}
-                    value={telefone}
+                    value={profile.phone}
                     onChangeText={setTelefone}
                     keyboardType="phone-pad"
                     placeholder="Telefone"
@@ -249,7 +249,7 @@ export default function EditProfileModal  ({
 
                   <TextInput
                     style={styles.textInput}
-                    value={email}
+                    value={profile.email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
                     autoCapitalize="none"

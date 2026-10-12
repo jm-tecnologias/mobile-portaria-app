@@ -24,8 +24,8 @@ import {
   Clock,
 } from 'lucide-react-native';
 import ResidentIDModal from './residentIDModal';
-import { createInvite } from '../../service/_invite-events';
 import { fetchDashboard } from '../../service/_dashboard-events';
+import { createInvite } from '../../service/_invite-events';
 
 
 export default function InvitesScreen({ navigation, route }) {

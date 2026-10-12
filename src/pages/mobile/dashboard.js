@@ -140,11 +140,14 @@ export default function ResidentDashboardScreen({ navigation, route }) {
   const handleEditProfile = () => {
     setEditProfileVisible(true)
   };
+  
   const handleCloseEditProfile = () => {
     setEditProfileVisible(false)
   };
+
+
   const handleSaveProfile = () => {
-    console.log('Funcao por sem implementada')
+    console.log('Funcao por ser implementada: ')
   }
 
   const handleOpenID = () => {
@@ -158,12 +161,6 @@ export default function ResidentDashboardScreen({ navigation, route }) {
   // =========================================================
   // NAVEGAÇÃO
   // =========================================================
-
-  // const handleEditProfile = () => {
-  //   navigation.navigate('EditProfileModal', {
-  //     ...navigationParams
-  //   });
-  // };
 
   const handleNavigateToInvites = () => {
     navigation.navigate('InvitesScreen', {
@@ -591,6 +588,14 @@ export default function ResidentDashboardScreen({ navigation, route }) {
         visible={editProfileVisible}
         onClose={handleCloseEditProfile}
         onSave={handleSaveProfile}
+        profile={{
+          name: dataSet?.member?.name,
+          surname: dataSet?.member?.surname,
+          doc_id: dataSet?.member?.doc_id,
+          phone: dataSet?.member?.phone,
+          email: dataSet?.member?.email,
+          photo_url: dataSet?.member?.photo_url,
+        }}
       />
 
       <ResidentIDModal
